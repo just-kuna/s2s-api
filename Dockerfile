@@ -3,9 +3,10 @@ FROM node:20-alpine AS builder
 RUN apk update && \
     apk add git ffmpeg wget curl bash openssl
 
-LABEL version="2.2.3" description="Api to control whatsapp features through http requests." 
-LABEL maintainer="Davidson Gomes" git="https://github.com/DavidsonGomes"
-LABEL contact="contato@atendai.com"
+LABEL version="2.2.3" description="Api to control whatsapp features through http requests."
+LABEL maintainer="Just Kuna" git="https://github.com/just-kuna"
+LABEL contact="info@s2s.kz"
+LABEL com.centurylinklabs.watchtower.enable="true"
 
 WORKDIR /evolution
 
@@ -17,9 +18,10 @@ COPY ./src ./src
 COPY ./public ./public
 COPY ./prisma ./prisma
 COPY ./manager ./manager
-COPY ./.env.example ./.env
+COPY ./.env ./.env
 COPY ./runWithProvider.js ./
 COPY ./tsup.config.ts ./
+COPY ./swagger.yaml ./
 
 COPY ./Docker ./Docker
 
@@ -34,13 +36,13 @@ FROM node:20-alpine AS final
 RUN apk update && \
     apk add tzdata ffmpeg bash openssl
 
-ENV TZ=America/Sao_Paulo
+ENV TZ=Asia/Almaty
 
 WORKDIR /evolution
 
 COPY --from=builder /evolution/package.json ./package.json
 COPY --from=builder /evolution/package-lock.json ./package-lock.json
-
+COPY --from=builder /evolution/swagger.yaml/ ./swagger.yaml
 COPY --from=builder /evolution/node_modules ./node_modules
 COPY --from=builder /evolution/dist ./dist
 COPY --from=builder /evolution/prisma ./prisma

@@ -1,42 +1,23 @@
-version: '3.3'
+version: '3.8'
 
 services:
-  postgres:
-    container_name: postgres
+  postgres-api:
     image: postgres:15
-    networks:
-      - evolution-net
-    command: ["postgres", "-c", "max_connections=1000"]
+    container_name: postgres-api-container
     restart: always
-    ports:
-      - 5432:5432
     environment:
-      - POSTGRES_PASSWORD=PASSWORD
+      POSTGRES_USER: admin       # Имя пользователя
+      POSTGRES_PASSWORD: secret  # Пароль
+      POSTGRES_DB: api           # Название базы данных
+    ports:
+      - "5432:5432"              # Проброс порта (хост:контейнер)
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    expose:
-      - 5432
-
-  pgadmin:
-    image: dpage/pgadmin4:latest
+      - postgres-data:/var/lib/postgresql/data  # Сохранение данных в volume
     networks:
-      - evolution-net
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=EMAIL
-      - PGADMIN_DEFAULT_PASSWORD=PASSWORD  
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-    ports:
-      - 4000:80
-    links:
-      - postgres
+      - api-network
 
 volumes:
-  postgres_data:
-  pgadmin_data:
-
+  postgres-data:                 # Объем для хранения данных
 
 networks:
-  evolution-net:
-    name: evolution-net
-    driver: bridge
+  api-network:                   # Сеть для контейнера

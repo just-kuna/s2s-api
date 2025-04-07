@@ -62,20 +62,18 @@ router
   .get('/', (req, res) => {
     res.status(HttpStatus.OK).json({
       status: HttpStatus.OK,
-      message: 'Welcome to the Evolution API, it is working!',
+      message: 'Welcome to the S2S API, it is working!',
       version: packageJson.version,
-      clientName: process.env.DATABASE_CONNECTION_CLIENT_NAME,
       manager: !serverConfig.DISABLE_MANAGER ? `${req.protocol}://${req.get('host')}/manager` : undefined,
-      documentation: `https://doc.evolution-api.com`,
     });
   })
   .post('/verify-creds', authGuard['apikey'], async (req, res) => {
     return res.status(HttpStatus.OK).json({
       status: HttpStatus.OK,
-      message: 'Credentials are valid',
-      facebookAppId: process.env.FACEBOOK_APP_ID,
-      facebookConfigId: process.env.FACEBOOK_CONFIG_ID,
-      facebookUserToken: process.env.FACEBOOK_USER_TOKEN,
+      // message: 'Credentials are valid',
+      // facebookAppId: process.env.FACEBOOK_APP_ID,
+      // facebookConfigId: process.env.FACEBOOK_CONFIG_ID,
+      // facebookUserToken: process.env.FACEBOOK_USER_TOKEN,
     });
   })
   .use('/instance', new InstanceRouter(configService, ...guards).router)

@@ -17,6 +17,7 @@ import compression from 'compression';
 import cors from 'cors';
 import express, { json, NextFunction, Request, Response, urlencoded } from 'express';
 import { join } from 'path';
+import { swaggerRouter } from './docs/swagger.conf';
 
 function initWA() {
   waMonitor.loadInstance();
@@ -59,7 +60,7 @@ async function bootstrap() {
   app.set('view engine', 'hbs');
   app.set('views', join(ROOT_DIR, 'views'));
   app.use(express.static(join(ROOT_DIR, 'public')));
-
+  app.use(swaggerRouter);
   app.use('/store', express.static(join(ROOT_DIR, 'store')));
 
   app.use('/', router);
